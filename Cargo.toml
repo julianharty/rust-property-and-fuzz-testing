@@ -1,5 +1,5 @@
 [package]
-name = "chatgpt-rust-property-and-fuzz-testing"
+name = "chatgpt_rust_property_and_fuzz_testing"
 version = "0.1.0"
 edition = "2024"
 
