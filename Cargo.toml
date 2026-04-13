@@ -1,0 +1,6 @@
+[package]
+name = "chatgpt-rust-property-and-fuzz-testing"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
