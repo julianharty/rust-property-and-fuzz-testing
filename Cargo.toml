@@ -1,9 +1,4 @@
-[package]
-name = "chatgpt_rust_property_and_fuzz_testing"
-version = "0.1.0"
-edition = "2024"
+[workspace]
+members = ["colorlib", "testsupport", "fuzz"]
+resolver = "2"
 
-[dependencies]
-
-[dev-dependencies]
-proptest = "1"

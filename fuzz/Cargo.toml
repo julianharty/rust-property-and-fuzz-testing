@@ -1,28 +1,21 @@
 [package]
-name = "chatgpt_rust_property_and_fuzz_testing-fuzz"
+name = "colorlib-fuzz"
 version = "0.0.0"
+edition = "2021"
 publish = false
-edition = "2024"
 
 [package.metadata]
 cargo-fuzz = true
 
 [dependencies]
 libfuzzer-sys = "0.4"
-
-[dependencies.chatgpt_rust_property_and_fuzz_testing]
-path = ".."
+arbitrary = { version = "1", features = ["derive"] }
+colorlib = { path = "../colorlib" }
+testsupport = { path = "../testsupport" }
 
 [[bin]]
 name = "parse_hex"
 path = "fuzz_targets/parse_hex.rs"
-test = false
-doc = false
-bench = false
-
-[[bin]]
-name = "fuzz_target_1"
-path = "fuzz_targets/fuzz_target_1.rs"
 test = false
 doc = false
 bench = false
