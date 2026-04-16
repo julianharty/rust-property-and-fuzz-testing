@@ -79,6 +79,10 @@ pub fn model_parse_hex_color(input: &[u8]) -> Option<(u8, u8, u8)> {
     ))
 }
 
+pub fn model_to_hex(rgb: (u8, u8, u8)) -> String {
+    format!("#{:02X}{:02X}{:02X}", rgb.0, rgb.1, rgb.2)
+}
+
 #[cfg(feature = "with-proptest")]
 pub mod proptest_support {
     use super::{HexCase, HexCaseKind};
@@ -87,9 +91,7 @@ pub mod proptest_support {
     pub fn hex_case_strategy() -> impl Strategy<Value = HexCase> {
         let hex = prop::sample::select("0123456789ABCDEFabcdef".bytes().collect::<Vec<_>>());
         let bad = prop::sample::select("GgZz/:-_ ".bytes().collect::<Vec<_>>());
-        let ascii = prop::sample::select(
-            "0123456789ABCDEFabcdefXYZ ".bytes().collect::<Vec<_>>(),
-        );
+        let ascii = prop::sample::select("0123456789ABCDEFabcdefXYZ ".bytes().collect::<Vec<_>>());
         let two_byte_utf8 = prop::sample::select(
             (0x00A1u32..=0x00FF)
                 .filter_map(char::from_u32)
@@ -99,23 +101,35 @@ pub mod proptest_support {
 
         prop_oneof![
             // Exactly "#RRGGBB" with valid ASCII hex.
-            (hex.clone(), hex.clone(), hex.clone(), hex.clone(), hex.clone(), hex.clone())
+            (
+                hex.clone(),
+                hex.clone(),
+                hex.clone(),
+                hex.clone(),
+                hex.clone(),
+                hex.clone()
+            )
                 .prop_map(|t| HexCase {
                     kind: HexCaseKind::ValidHex,
                     bytes: vec![b'#', t.0, t.1, t.2, t.3, t.4, t.5],
                 }),
-
             // Right shape, wrong ASCII content in at least one hex position.
-            (bad, hex.clone(), hex.clone(), hex.clone(), hex.clone(), hex.clone())
+            (
+                bad,
+                hex.clone(),
+                hex.clone(),
+                hex.clone(),
+                hex.clone(),
+                hex.clone()
+            )
                 .prop_map(|t| HexCase {
                     kind: HexCaseKind::BadAsciiHex,
                     bytes: vec![b'#', t.0, t.1, t.2, t.3, t.4, t.5],
                 }),
-
             // Valid byte length and prefix, but unsafe for naive UTF-8 slicing.
             // Shape: '#' + 1 ASCII byte + 2-byte char + 2-byte char + 1 ASCII byte = 7 bytes
-            (ascii.clone(), two_byte_utf8.clone(), two_byte_utf8, ascii)
-                .prop_map(|(a, b, c, d)| {
+            (ascii.clone(), two_byte_utf8.clone(), two_byte_utf8, ascii).prop_map(
+                |(a, b, c, d)| {
                     let mut bytes = vec![b'#', a];
                     bytes.extend(b);
                     bytes.extend(c);
@@ -124,15 +138,21 @@ pub mod proptest_support {
                         kind: HexCaseKind::Utf8BoundaryBreaker,
                         bytes,
                     }
-                }),
-
+                }
+            ),
             // Wrong prefix but otherwise plausible length.
-            (hex.clone(), hex.clone(), hex.clone(), hex.clone(), hex.clone(), hex)
+            (
+                hex.clone(),
+                hex.clone(),
+                hex.clone(),
+                hex.clone(),
+                hex.clone(),
+                hex
+            )
                 .prop_map(|t| HexCase {
                     kind: HexCaseKind::BadPrefix,
                     bytes: vec![b'!', t.0, t.1, t.2, t.3, t.4, t.5],
                 }),
-
             // Arbitrary wrong lengths.
             prop::collection::vec(any::<u8>(), 0..=12)
                 .prop_filter("exclude exact 7-byte #xxxxxx cases for WrongLength", |v| {
@@ -149,7 +169,6 @@ pub mod proptest_support {
 #[cfg(feature = "with-quickcheck")]
 impl quickcheck::Arbitrary for HexCase {
     fn arbitrary(g: &mut quickcheck::Gen) -> Self {
-
         let choice = u8::arbitrary(g) % 5;
 
         match choice {

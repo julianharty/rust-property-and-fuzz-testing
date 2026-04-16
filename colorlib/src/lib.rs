@@ -1,3 +1,11 @@
+/// Parses a color in `#RRGGBB` form.
+///
+/// ```
+/// use colorlib::parse_hex_color;
+///
+/// assert_eq!(parse_hex_color("#FF0000"), Some((255, 0, 0)));
+/// assert_eq!(parse_hex_color("red"), None);
+/// ```
 pub fn parse_hex_color(s: &str) -> Option<(u8, u8, u8)> {
     let bytes = s.as_bytes();
 
@@ -27,4 +35,29 @@ pub fn parse_hex_color(s: &str) -> Option<(u8, u8, u8)> {
 
 pub fn to_hex_color((r, g, b): (u8, u8, u8)) -> String {
     format!("#{r:02X}{g:02X}{b:02X}")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_black() {
+        assert_eq!(parse_hex_color("#000000"), Some((0, 0, 0)));
+    }
+
+    #[test]
+    fn rejects_bad_prefix() {
+        assert_eq!(parse_hex_color("!123456"), None);
+    }
+
+    #[test]
+    fn rejects_wrong_length() {
+        assert_eq!(parse_hex_color("#123"), None);
+    }
+
+    #[test]
+    fn renderer_formats_uppercase() {
+        assert_eq!(to_hex_color((10, 11, 12)), "#0A0B0C");
+    }
 }

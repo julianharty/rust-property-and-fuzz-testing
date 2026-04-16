@@ -2,7 +2,7 @@
 
 use arbitrary::{Arbitrary, Unstructured};
 use libfuzzer_sys::fuzz_target;
-use testsupport::{HexCase, model_parse_hex_color};
+use testsupport::{model_parse_hex_color, HexCase};
 
 fuzz_target!(|data: &[u8]| {
     // Raw-byte path

@@ -1,6 +1,6 @@
 use colorlib::parse_hex_color;
 use quickcheck::{QuickCheck, TestResult};
-use testsupport::{HexCase, model_parse_hex_color};
+use testsupport::{model_parse_hex_color, HexCase};
 
 #[test]
 fn quickcheck_parser_matches_model() {
