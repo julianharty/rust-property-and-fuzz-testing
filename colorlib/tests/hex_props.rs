@@ -14,4 +14,9 @@ proptest! {
         println!("{}", s);
         let _ = parse_hex_color(&s);
     }
+
+    #[test]
+    fn never_panics_any_input(s in any::<String>()) {
+        let _ = parse_hex_color(&s);
+    }
 }
