@@ -4,7 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+quickcheck = "1.1.0"
 
 [dev-dependencies]
 proptest = "1"
-testsupport = { path = "../testsupport" }
+quickcheck = "1"
+testsupport = { path = "../testsupport", features = ["with-proptest", "with-quickcheck"] }

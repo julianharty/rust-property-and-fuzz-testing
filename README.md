@@ -1,9 +1,9 @@
 
-This is a small, self-contained Rust project created by working with Chat GPT using a web browser session to experiment with proptest and cargo fuzz. The code being tested is trivial and has little value beyond providing a test bed for property and fuzz tests. 
+This is a small, self-contained Rust project created by working with Chat GPT using a web browser session to experiment with quicktest, proptest, and cargo fuzz. The code being tested is trivial and has little value beyond providing a test bed for property and fuzz tests. 
 
-The code has been restructured to extract helper functions into a small crate that can be used by both the property testing framework and cargo fuzz without poluting the 'main' codebase. I say 'main' as the code is so small and trivial it doesn't really deserve the term.
+The code has been restructured to extract helper functions into a small crate that can be used by both the property and quicktest testing frameworks and cargo fuzz without poluting the 'main' codebase. I say 'main' as the code is so small and trivial it doesn't really deserve the term.
 
-Here are a couple of examples of how to run the property tests. I've also used `println!` to output the string that causes problems for the code being tested. The --nocapture flag means the println! output appears in the terminal session. 
+Here are a couple of examples of how to run the property and quicktest tests. The --nocapture flag means the println! output appears in the terminal session. 
 
 To run the property based tests:
 ```

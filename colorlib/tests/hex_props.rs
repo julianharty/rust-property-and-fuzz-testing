@@ -1,22 +1,20 @@
-use colorlib::{parse_hex_color, to_hex_color};
+use colorlib::parse_hex_color;
 use proptest::prelude::*;
-use testsupport::hexish_strings;
+use testsupport::{model_parse_hex_color, proptest_support::hex_case_strategy};
 
 proptest! {
     #[test]
-    fn valid_roundtrip(r in any::<u8>(), g in any::<u8>(), b in any::<u8>()) {
-        let s = to_hex_color((r, g, b));
-        prop_assert_eq!(parse_hex_color(&s), Some((r, g, b)));
-    }
+    fn parser_matches_model(case in hex_case_strategy()) {
+        let actual = case.as_str().and_then(parse_hex_color);
+        let expected = model_parse_hex_color(case.as_bytes());
 
-    #[test]
-    fn parse_never_panics_on_targeted_strings(s in hexish_strings()) {
-        println!("{}", s);
-        let _ = parse_hex_color(&s);
-    }
-
-    #[test]
-    fn never_panics_any_input(s in any::<String>()) {
-        let _ = parse_hex_color(&s);
+        prop_assert_eq!(
+            actual,
+            expected,
+            "kind={:?}, bytes={:?}, display={:?}",
+            case.kind,
+            case.as_bytes(),
+            case.display()
+        );
     }
 }

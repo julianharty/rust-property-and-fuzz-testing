@@ -2,7 +2,13 @@
 name = "testsupport"
 version = "0.1.0"
 edition = "2021"
+[features]
+default = []
+with-proptest = ["dep:proptest"]
+with-quickcheck = ["dep:quickcheck"]
+with-arbitrary = ["dep:arbitrary"]
 
 [dependencies]
-arbitrary = { version = "1", features = ["derive"] }
-proptest = "1"
+proptest = { version = "1", optional = true }
+quickcheck = { version = "1", optional = true }
+arbitrary = { version = "1", features = ["derive"], optional = true }
