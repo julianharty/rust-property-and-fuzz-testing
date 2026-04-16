@@ -28,4 +28,3 @@ pub fn parse_hex_color(s: &str) -> Option<(u8, u8, u8)> {
 pub fn to_hex_color((r, g, b): (u8, u8, u8)) -> String {
     format!("#{r:02X}{g:02X}{b:02X}")
 }
-
