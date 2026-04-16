@@ -16,7 +16,7 @@ variables:
 test:
   stage: test
   script:
-    - cargo test --workspace --all-features
+    - PROPTEST_VERBOSE=1 cargo test --workspace --all-features
 
 fuzz_smoke:
   stage: fuzz
