@@ -1,0 +1,31 @@
+stages:
+  - test
+  - fuzz
+
+default:
+  image: rust:1.90-slim
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .cargo/
+      - target/
+
+variables:
+  CARGO_HOME: "$CI_PROJECT_DIR/.cargo"
+
+test:
+  stage: test
+  script:
+    - cargo test --workspace --all-features
+
+fuzz_smoke:
+  stage: fuzz
+  image: rustlang/rust:nightly
+  script:
+    - cargo install cargo-fuzz --locked
+    - cargo fuzz build parse_hex
+    - cargo fuzz run parse_hex -- -max_total_time=60
+  artifacts:
+    when: on_failure
+    paths:
+      - fuzz/artifacts/
